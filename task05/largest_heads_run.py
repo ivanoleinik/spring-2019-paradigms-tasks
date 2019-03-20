@@ -13,8 +13,7 @@ def main():
         total += 1
         cur_run = 0
         max_run = 0
-        for _ in range(FLIPS):
-            flip = random.choice([0, 1])
+        for flip in [random.choice([0, 1]) for _ in range(FLIPS)]:
             if flip:
                 cur_run += 1
                 if cur_run > max_run:

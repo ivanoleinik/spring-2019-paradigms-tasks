@@ -11,7 +11,8 @@ class PrettyPrinter(model.ASTNodeVisitor):
     def pretty_print(self, program):
         self.enable_indent = 1
         self.indent_depth = 0
-        return f'{program.accept(self)};'
+        return program.accept(self) + \
+            ('' if program.accept(self).endswith('}') else ';')
 
     def indent(self):
         if self.enable_indent > 0:
@@ -32,7 +33,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
         )
         self.indent_depth += 1
         for statement in function_definition.function.body or []:
-            result += statement.accept(self) + ';\n'
+            result += statement.accept(self) + '\n'
         self.indent_depth -= 1
         result += '}'
         return result

@@ -18,14 +18,14 @@ def test_pretty_function_definition(capsys):
     )
     out, err = capsys.readouterr()
     assert not err
-    assert out == 'def foo() {\n};\n'
+    assert out == 'def foo() {\n}\n'
 
 
 def test_pretty_conditional(capsys):
     printer.pretty_print(model.Conditional(model.Number(239), [], []))
     out, err = capsys.readouterr()
     assert not err
-    assert out == 'if (239) {\n};\n'
+    assert out == 'if (239) {\n}\n'
 
 
 def test_pretty_print(capsys):
@@ -110,8 +110,8 @@ def test_pretty_factorial(capsys):
         1;
     } else {
         (n) * (fac((n) - (1)));
-    };
-};
+    }
+}
 '''
 
 

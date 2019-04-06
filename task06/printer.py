@@ -14,7 +14,9 @@ class PrettyPrinter(model.ASTNodeVisitor):
         return f'{program.accept(self)};'
 
     def indent(self):
-        return '    ' * (self.indent_depth * self.enable_indent)
+        if self.enable_indent > 0:
+            return '    ' * self.indent_depth
+        return ''
 
     def visit_number(self, number):
         return self.indent() + str(number.value)
@@ -30,7 +32,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
         )
         self.indent_depth += 1
         for statement in function_definition.function.body or []:
-            result += f'{statement.accept(self)};\n'
+            result += statement.accept(self) + ';\n'
         self.indent_depth -= 1
         result += '}'
         return result

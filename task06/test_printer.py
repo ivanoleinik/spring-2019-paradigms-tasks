@@ -105,16 +105,14 @@ def test_pretty_factorial(capsys):
     printer.pretty_print(yat_fac)
     out, err = capsys.readouterr()
     assert not err
-    assert out.split('\n') == [
-        'def fac(n) {',
-        '    if ((n) == (0)) {',
-        '        1;',
-        '    } else {',
-        '        (n) * (fac((n) - (1)));',
-        '    };',
-        '};',
-        ''
-    ]
+    assert out == '''def fac(n) {
+    if ((n) == (0)) {
+        1;
+    } else {
+        (n) * (fac((n) - (1)));
+    };
+};
+'''
 
 
 if __name__ == "__main__":

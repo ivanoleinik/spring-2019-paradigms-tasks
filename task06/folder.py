@@ -28,11 +28,11 @@ class ConstantFolder(model.ASTNodeVisitor):
              for statement in conditional.if_false or []]
         )
 
-    def visit_print(self, print):
-        return model.Print(print.expr.accept(self))
+    def visit_print(self, print_object):
+        return model.Print(print_object.expr.accept(self))
 
-    def visit_read(self, read):
-        return model.Read(read.name)
+    def visit_read(self, read_object):
+        return model.Read(read_object.name)
 
     def visit_function_call(self, function_call):
         return model.FunctionCall(

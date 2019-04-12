@@ -40,7 +40,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
         for statement in function_definition.function.body or []:
             result += statement.accept(self) + '\n'
         self.indent_depth -= 1
-        result += '}'
+        result += self.indent() + '}'
         return result
 
     def visit_conditional(self, conditional):

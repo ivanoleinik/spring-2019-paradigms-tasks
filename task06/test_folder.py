@@ -3,66 +3,50 @@
 import pytest
 
 import model
-import printer
 import folder
 
 
-def test_binary_operation_num_num(capsys):
-    printer.pretty_print(folder.fold_constants(model.BinaryOperation(
+def test_binary_operation_num_num():
+    assert folder.fold_constants(model.BinaryOperation(
         model.Number(239),
         '%',
         model.Number(30)
-    )))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == '29;\n'
+    )) == model.Number(29)
 
 
-def test_binary_operation_num_ref(capsys):
-    printer.pretty_print(folder.fold_constants(model.BinaryOperation(
+def test_binary_operation_num_ref():
+    assert folder.fold_constants(model.BinaryOperation(
         model.Number(0),
         '*',
         model.Reference('var')
-    )))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == '0;\n'
+    )) == model.Number(0)
 
 
-def test_binary_operation_ref_num(capsys):
-    printer.pretty_print(folder.fold_constants(model.BinaryOperation(
+def test_binary_operation_ref_num():
+    assert folder.fold_constants(model.BinaryOperation(
         model.Reference('var'),
         '*',
         model.Number(0)
-    )))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == '0;\n'
+    )) == model.Number(0)
 
 
-def test_binary_operation_ref_ref(capsys):
-    printer.pretty_print(folder.fold_constants(model.BinaryOperation(
+def test_binary_operation_ref_ref():
+    assert folder.fold_constants(model.BinaryOperation(
         model.Reference('var'),
         '-',
         model.Reference('var')
-    )))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == '0;\n'
+    )) == model.Number(0)
 
 
-def test_unary_operation(capsys):
-    printer.pretty_print(folder.fold_constants(model.UnaryOperation(
+def test_unary_operation():
+    assert folder.fold_constants(model.UnaryOperation(
         '-',
         model.Number(-239)
-    )))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == '239;\n'
+    )) == model.Number(239)
 
 
-def test_end_to_end(capsys):
-    printer.pretty_print(folder.fold_constants(
+def test_end_to_end():
+    assert folder.fold_constants(
         model.BinaryOperation(
             model.Number(10),
             '-',
@@ -79,7 +63,4 @@ def test_end_to_end(capsys):
                 )
             )
         )
-    ))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == '13;\n'
+    ) == model.Number(13)

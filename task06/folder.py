@@ -61,8 +61,8 @@ class ConstantFolder(model.ASTNodeVisitor):
                 )
         ):
             return model.Number(0)
-        if op == '-' and isinstance(lhs, model.Reference) \
-                and isinstance(rhs, model.Reference) and lhs.name == rhs.name:
+        if (op == '-' and isinstance(lhs, model.Reference)
+                and isinstance(rhs, model.Reference) and lhs.name == rhs.name):
             return model.Number(0)
         return result
 

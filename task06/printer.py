@@ -3,6 +3,12 @@
 import model
 
 
+def delete_semicolon(line):
+    if line.endswith(';'):
+        return line[:-1]
+    return line
+
+
 class PrettyPrinter(model.ASTNodeVisitor):
     def __init__(self):
         self.enable_indent = 1
@@ -11,8 +17,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
     def pretty_print(self, program):
         self.enable_indent = 1
         self.indent_depth = 0
-        return program.accept(self) + \
-            ('' if program.accept(self).endswith('}') else ';')
+        return program.accept(self)
 
     def indent(self):
         if self.enable_indent > 0:
@@ -20,7 +25,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
         return ''
 
     def visit_number(self, number):
-        return self.indent() + str(number.value)
+        return f'{self.indent()}{str(number.value)};'
 
     def visit_function(self, function):
         raise RuntimeError('PrettyPrinter must not visit function object')
@@ -40,13 +45,13 @@ class PrettyPrinter(model.ASTNodeVisitor):
 
     def visit_conditional(self, conditional):
         self.enable_indent -= 1
-        condition_result = conditional.condition.accept(self)
+        condition_result = delete_semicolon(conditional.condition.accept(self))
         self.enable_indent += 1
         result = f'{self.indent()}if ({condition_result}) {{\n'
 
         self.indent_depth += 1
         for statement in conditional.if_true or []:
-            result += f'{statement.accept(self)};\n'
+            result += f'{statement.accept(self)}\n'
         self.indent_depth -= 1
         result += self.indent() + '}'
 
@@ -54,7 +59,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
             result += ' else {\n'
             self.indent_depth += 1
             for statement in conditional.if_false:
-                result += f'{statement.accept(self)};\n'
+                result += f'{statement.accept(self)}\n'
             self.indent_depth -= 1
             result += self.indent() + '}'
         return result
@@ -66,35 +71,35 @@ class PrettyPrinter(model.ASTNodeVisitor):
         return f'{self.indent()}print {result}'
 
     def visit_read(self, read_object):
-        return f'{self.indent()}read {read_object.name}'
+        return f'{self.indent()}read {read_object.name};'
 
     def visit_function_call(self, function_call):
         self.enable_indent -= 1
         result = []
         for arg in function_call.args:
-            result.append(arg.accept(self))
+            result.append(delete_semicolon(arg.accept(self)))
         self.enable_indent += 1
-        return '{}({})'.format(
-            function_call.fun_expr.accept(self),
+        return '{}({});'.format(
+            delete_semicolon(function_call.fun_expr.accept(self)),
             ', '.join(result)
         )
 
     def visit_reference(self, reference):
-        return self.indent() + reference.name
+        return f'{self.indent()}{reference.name};'
 
     def visit_binary_operation(self, binary_operation):
         self.enable_indent -= 1
-        lhs_result = binary_operation.lhs.accept(self)
-        rhs_result = binary_operation.rhs.accept(self)
+        lhs_result = delete_semicolon(binary_operation.lhs.accept(self))
+        rhs_result = delete_semicolon(binary_operation.rhs.accept(self))
         self.enable_indent += 1
         return self.indent() + \
-            f'({lhs_result}) {binary_operation.op} ({rhs_result})'
+            f'({lhs_result}) {binary_operation.op} ({rhs_result});'
 
     def visit_unary_operation(self, unary_operation):
         self.enable_indent -= 1
-        result = unary_operation.expr.accept(self)
+        result = delete_semicolon(unary_operation.expr.accept(self))
         self.enable_indent += 1
-        return f'{self.indent()}{unary_operation.op}({result})'
+        return f'{self.indent()}{unary_operation.op}({result});'
 
 
 def pretty_print(program):

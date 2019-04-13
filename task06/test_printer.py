@@ -74,14 +74,14 @@ def test_pretty_binary_operation(capsys):
     printer.pretty_print(mod)
     out, err = capsys.readouterr()
     assert not err
-    assert out == '((1) * (2)) % ((3) + ((1) * (2)));\n'
+    assert out == '((1 * 2) % (3 + (1 * 2)));\n'
 
 
 def test_pretty_unary_operation(capsys):
     printer.pretty_print(model.UnaryOperation('-', model.Number(239)))
     out, err = capsys.readouterr()
     assert not err
-    assert out == '-(239);\n'
+    assert out == '(-239);\n'
 
 
 def test_pretty_factorial(capsys):
@@ -109,10 +109,10 @@ def test_pretty_factorial(capsys):
     assert not err
     assert out == textwrap.dedent('''\
     def fac(n) {
-        if ((n) == (0)) {
+        if ((n == 0)) {
             1;
         } else {
-            (n) * (fac((n) - (1)));
+            (n * fac((n - 1)));
         }
     }
     ''')

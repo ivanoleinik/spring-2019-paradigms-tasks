@@ -9,11 +9,11 @@ class ExpressionPrinter(model.ASTNodeVisitor):
         return str(number.value)
 
     def visit_function(self, function):
-        raise TypeError('ExpressionPrinter must not visit function object')
+        raise TypeError('ExpressionPrinter must not visit Function object')
 
     def visit_function_definition(self, function_definition):
         raise TypeError('ExpressionPrinter must not visit'
-                        'function_definition object')
+                        'FunctionDefinition object')
 
     def visit_conditional(self, conditional):
         raise TypeError('ExpressionPrinter must not visit conditional object')

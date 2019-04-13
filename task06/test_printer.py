@@ -7,11 +7,9 @@ import printer
 import textwrap
 
 
-def test_pretty_number(capsys):
-    printer.pretty_print(model.Number(239))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == '239;\n'
+def test_pretty_number():
+    assert printer.PrettyPrinter(
+        printer.ExpressionPrinter()).visit_number(model.Number(239)) == '239;'
 
 
 def test_pretty_function_definition(capsys):
@@ -60,11 +58,10 @@ def test_pretty_function_call(capsys):
     assert out == 'foo(2, 3, 9);\n'
 
 
-def test_pretty_reference(capsys):
-    printer.pretty_print(model.Reference('var'))
-    out, err = capsys.readouterr()
-    assert not err
-    assert out == 'var;\n'
+def test_pretty_reference():
+    assert printer.PrettyPrinter(
+        printer.ExpressionPrinter()
+    ).visit_reference(model.Reference('var')) == 'var;'
 
 
 def test_pretty_binary_operation(capsys):

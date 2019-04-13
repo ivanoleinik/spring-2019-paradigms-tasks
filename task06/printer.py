@@ -4,9 +4,7 @@ import model
 
 
 def delete_semicolon(line):
-    if line.endswith(';'):
-        return line[:-1]
-    return line
+    return line[:-1]
 
 
 class PrettyPrinter(model.ASTNodeVisitor):
@@ -92,8 +90,8 @@ class PrettyPrinter(model.ASTNodeVisitor):
         lhs_result = delete_semicolon(binary_operation.lhs.accept(self))
         rhs_result = delete_semicolon(binary_operation.rhs.accept(self))
         self.enable_indent += 1
-        return self.indent() + \
-            f'({lhs_result}) {binary_operation.op} ({rhs_result});'
+        return (self.indent() +
+                f'({lhs_result}) {binary_operation.op} ({rhs_result});')
 
     def visit_unary_operation(self, unary_operation):
         self.enable_indent -= 1

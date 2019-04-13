@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+
 import pytest
 
 import model
 import printer
+import textwrap
 
 
 def test_pretty_number(capsys):
@@ -14,7 +16,7 @@ def test_pretty_number(capsys):
 
 def test_pretty_function_definition(capsys):
     printer.pretty_print(
-        model.FunctionDefinition("foo", model.Function([], []))
+        model.FunctionDefinition('foo', model.Function([], []))
     )
     out, err = capsys.readouterr()
     assert not err
@@ -105,15 +107,16 @@ def test_pretty_factorial(capsys):
     printer.pretty_print(yat_fac)
     out, err = capsys.readouterr()
     assert not err
-    assert out == '''def fac(n) {
-    if ((n) == (0)) {
-        1;
-    } else {
-        (n) * (fac((n) - (1)));
+    assert out == textwrap.dedent('''\
+    def fac(n) {
+        if ((n) == (0)) {
+            1;
+        } else {
+            (n) * (fac((n) - (1)));
+        }
     }
-}
-'''
+    ''')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     pytest.main()

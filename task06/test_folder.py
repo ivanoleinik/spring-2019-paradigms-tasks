@@ -14,7 +14,7 @@ def test_binary_operation_num_num():
     )) == model.Number(29)
 
 
-def test_binary_operation_zero_ref():
+def test_zero_multiply_by_ref():
     assert folder.fold_constants(model.BinaryOperation(
         model.Number(0),
         '*',
@@ -22,7 +22,7 @@ def test_binary_operation_zero_ref():
     )) == model.Number(0)
 
 
-def test_binary_operation_ref_zero():
+def test_ref_multiply_by_zero():
     assert folder.fold_constants(model.BinaryOperation(
         model.Reference('var'),
         '*',
@@ -30,7 +30,7 @@ def test_binary_operation_ref_zero():
     )) == model.Number(0)
 
 
-def test_binary_operation_ref_minus_same_ref():
+def test_ref_minus_the_same_ref():
     assert folder.fold_constants(model.BinaryOperation(
         model.Reference('var'),
         '-',

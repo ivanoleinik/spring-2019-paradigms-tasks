@@ -22,6 +22,14 @@ class PrettyPrinter(model.ASTNodeVisitor):
             return '    ' * self.indent_depth
         return ''
 
+    def deep_code(self, code):
+        result = ''
+        self.indent_depth += 1
+        for statement in code or []:
+            result += f'{statement.accept(self)}\n'
+        self.indent_depth -= 1
+        return result
+
     def visit_number(self, number):
         return f'{self.indent()}{str(number.value)};'
 
@@ -34,10 +42,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
             function_definition.name,
             ', '.join(function_definition.function.args)
         )
-        self.indent_depth += 1
-        for statement in function_definition.function.body or []:
-            result += statement.accept(self) + '\n'
-        self.indent_depth -= 1
+        result += self.deep_code(function_definition.function.body)
         result += self.indent() + '}'
         return result
 
@@ -47,18 +52,11 @@ class PrettyPrinter(model.ASTNodeVisitor):
         self.enable_indent += 1
         result = f'{self.indent()}if ({condition_result}) {{\n'
 
-        self.indent_depth += 1
-        for statement in conditional.if_true or []:
-            result += f'{statement.accept(self)}\n'
-        self.indent_depth -= 1
+        result += self.deep_code(conditional.if_true)
         result += self.indent() + '}'
 
         if conditional.if_false:
-            result += ' else {\n'
-            self.indent_depth += 1
-            for statement in conditional.if_false:
-                result += f'{statement.accept(self)}\n'
-            self.indent_depth -= 1
+            result += f' else {{\n{self.deep_code(conditional.if_false)}'
             result += self.indent() + '}'
         return result
 

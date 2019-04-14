@@ -12,7 +12,7 @@ class ExpressionPrinter(model.ASTNodeVisitor):
         raise TypeError('ExpressionPrinter must not visit Function object')
 
     def visit_function_definition(self, function_definition):
-        raise TypeError('ExpressionPrinter must not visit'
+        raise TypeError('ExpressionPrinter must not visit '
                         'FunctionDefinition object')
 
     def visit_conditional(self, conditional):
@@ -61,7 +61,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
         result = ''
         for statement in block or []:
             result += statement.accept(self) + '\n'
-        return textwrap.indent(result, '    ')
+        return textwrap.indent(result, '    ') + '}'
 
     def visit_number(self, number):
         return self.visit_expression(number) + ';'
@@ -74,15 +74,14 @@ class PrettyPrinter(model.ASTNodeVisitor):
             function_definition.name,
             ', '.join(function_definition.function.args)
         )
-        result += self.visit_block(function_definition.function.body) + '}'
+        result += self.visit_block(function_definition.function.body)
         return result
 
     def visit_conditional(self, conditional):
         result = 'if (' + self.visit_expression(conditional.condition)
         result += ') {\n' + self.visit_block(conditional.if_true)
         if conditional.if_false:
-            result += '} else {\n' + self.visit_block(conditional.if_false)
-        result += '}'
+            result += ' else {\n' + self.visit_block(conditional.if_false)
         return result
 
     def visit_print(self, print_object):

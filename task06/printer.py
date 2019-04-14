@@ -61,7 +61,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
         result = ''
         for statement in block or []:
             result += statement.accept(self) + '\n'
-        return textwrap.indent(result, '    ') + '}'
+        return '{\n' + textwrap.indent(result, '    ') + '}'
 
     def visit_number(self, number):
         return self.visit_expression(number) + ';'
@@ -70,7 +70,7 @@ class PrettyPrinter(model.ASTNodeVisitor):
         raise TypeError('PrettyPrinter must not visit Function object')
 
     def visit_function_definition(self, function_definition):
-        result = 'def {}({}) {{\n'.format(
+        result = 'def {}({}) '.format(
             function_definition.name,
             ', '.join(function_definition.function.args)
         )
@@ -79,9 +79,9 @@ class PrettyPrinter(model.ASTNodeVisitor):
 
     def visit_conditional(self, conditional):
         result = 'if (' + self.visit_expression(conditional.condition)
-        result += ') {\n' + self.visit_block(conditional.if_true)
+        result += ') ' + self.visit_block(conditional.if_true)
         if conditional.if_false:
-            result += ' else {\n' + self.visit_block(conditional.if_false)
+            result += ' else ' + self.visit_block(conditional.if_false)
         return result
 
     def visit_print(self, print_object):

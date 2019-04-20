@@ -14,6 +14,7 @@ extern crate threadpool;
 // Чтобы не писать `field::Cell:Empty`, можно "заимпортировать" нужные вещи из модуля.
 use field::Cell::*;
 use field::{parse_field, Field, N};
+use std::sync::mpsc::{channel, Sender};
 
 /// Эта функция выполняет один шаг перебора в поисках решения головоломки.
 /// Она перебирает значение какой-нибудь пустой клетки на поле всеми непротиворечивыми способами.
@@ -168,7 +169,7 @@ fn find_solution(f: &mut Field) -> Option<Field> {
     try_extend_field(f, |f_solved| f_solved.clone(), find_solution)
 }
 
-fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool: &threadpool::ThreadPool, depth: i32) {
+fn spawn_tasks(f: &mut Field, tx: &Sender<Option<Field>>, pool: &threadpool::ThreadPool, depth: i32) {
     assert!(depth >= 0);
     if depth != 0 {
         try_extend_field(
@@ -195,7 +196,7 @@ fn spawn_tasks(f: &mut Field, tx: &std::sync::mpsc::Sender<Option<Field>>, pool:
 /// в противном случае возвращает `None`.
 fn find_solution_parallel(mut f: Field) -> Option<Field> {
     const SPAWN_DEPTH: i32 = 2;
-    let (tx, rx) = std::sync::mpsc::channel();
+    let (tx, rx) = channel();
     let pool = threadpool::ThreadPool::new(8);
     spawn_tasks(&mut f, &tx, &pool, SPAWN_DEPTH);
     std::mem::drop(tx);

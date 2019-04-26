@@ -1,5 +1,4 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-
 #include "tsqueue.h"
 #include "doctest.h"
 
@@ -9,6 +8,7 @@ const int REPEATS = 3;
 TEST_CASE("ThreadsafeQueue works like Queue in a single thread") {
     ThreadsafeQueue q;
     threadsafe_queue_init(&q);
+<<<<<<< HEAD
 
     int a = 0, b = 0, c = 0;
 
@@ -61,6 +61,25 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
     threadsafe_queue_destroy(&qs[1]);
     threadsafe_queue_destroy(&qs[0]);
 =======
+=======
+
+    int a = 0, b = 0, c = 0;
+
+    threadsafe_queue_push(&q, &a);
+    threadsafe_queue_push(&q, &b);
+    CHECK(threadsafe_queue_wait_and_pop(&q) == &a);
+    CHECK(threadsafe_queue_wait_and_pop(&q) == &b);
+
+    threadsafe_queue_push(&q, &c);
+    threadsafe_queue_push(&q, &b);
+    CHECK(threadsafe_queue_wait_and_pop(&q) == &c);
+    CHECK(threadsafe_queue_wait_and_pop(&q) == &b);
+
+    threadsafe_queue_destroy(&q);
+}
+
+TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
+>>>>>>> Fix indends in tsqueue_test.cpp
     ThreadsafeQueue qs[2];
     threadsafe_queue_init(&qs[0]);
     threadsafe_queue_init(&qs[1]);
@@ -82,7 +101,11 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
             int counter = i;
             threadsafe_queue_push(&qs[0], &counter);
             int *recieved =
+<<<<<<< HEAD
                 static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
+=======
+                    static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
+>>>>>>> Fix indends in tsqueue_test.cpp
             CHECK(recieved == &counter);
             CHECK(counter == i + 1);
         }
@@ -93,7 +116,11 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
         ThreadsafeQueue *qs = static_cast<ThreadsafeQueue *>(_qs);
         for (int i = 0; i < PING_PONGS; i++) {
             int *value =
+<<<<<<< HEAD
                 static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
+=======
+                    static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
+>>>>>>> Fix indends in tsqueue_test.cpp
             (*value)++;
             threadsafe_queue_push(&qs[1], value);
         }
@@ -108,7 +135,10 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
 
     threadsafe_queue_destroy(&qs[1]);
     threadsafe_queue_destroy(&qs[0]);
+<<<<<<< HEAD
 >>>>>>> Everything works!
+=======
+>>>>>>> Fix indends in tsqueue_test.cpp
 }
 
 void *producer(void *_q) {

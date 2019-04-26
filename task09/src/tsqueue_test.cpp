@@ -1,4 +1,5 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
 #include "tsqueue.h"
 #include "doctest.h"
 
@@ -25,6 +26,7 @@ TEST_CASE("ThreadsafeQueue works like Queue in a single thread") {
 }
 
 TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
+<<<<<<< HEAD
     ThreadsafeQueue qs[2];
     threadsafe_queue_init(&qs[0]);
     threadsafe_queue_init(&qs[1]);
@@ -58,6 +60,55 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
 
     threadsafe_queue_destroy(&qs[1]);
     threadsafe_queue_destroy(&qs[0]);
+=======
+    ThreadsafeQueue qs[2];
+    threadsafe_queue_init(&qs[0]);
+    threadsafe_queue_init(&qs[1]);
+
+    // `PING_PONGS` раз должно произойти следующее:
+    // 0. Создаются два потока: `pinger` и `ponger`
+    //    (независимые от основного потока теста).
+    // 1. Поток `pinger` отправляет `qs[0]` потоку `ponger`
+    //    указатель на локальную переменную типа `int`.
+    // 2. Поток `ponger` увеличивает полученную переменную на
+    //    единицу и отправляет результат обратно через `qs[1]`.
+    // 3. Поток `pinger` проверяет, что пришёл правильный адрес
+    //    и что локальная переменная была увеличена.
+    const int PING_PONGS = 100;
+
+    auto pinger = [](void *_qs) -> void * {
+        ThreadsafeQueue *qs = static_cast<ThreadsafeQueue *>(_qs);
+        for (int i = 0; i < PING_PONGS; i++) {
+            int counter = i;
+            threadsafe_queue_push(&qs[0], &counter);
+            int *recieved =
+                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
+            CHECK(recieved == &counter);
+            CHECK(counter == i + 1);
+        }
+        return nullptr;
+    };
+
+    auto ponger = [](void *_qs) -> void * {
+        ThreadsafeQueue *qs = static_cast<ThreadsafeQueue *>(_qs);
+        for (int i = 0; i < PING_PONGS; i++) {
+            int *value =
+                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
+            (*value)++;
+            threadsafe_queue_push(&qs[1], value);
+        }
+        return nullptr;
+    };
+
+    pthread_t t1, t2;
+    REQUIRE(pthread_create(&t1, nullptr, pinger, qs) == 0);
+    REQUIRE(pthread_create(&t2, nullptr, ponger, qs) == 0);
+    REQUIRE(pthread_join(t2, nullptr) == 0);
+    REQUIRE(pthread_join(t1, nullptr) == 0);
+
+    threadsafe_queue_destroy(&qs[1]);
+    threadsafe_queue_destroy(&qs[0]);
+>>>>>>> Everything works!
 }
 
 void *producer(void *_q) {

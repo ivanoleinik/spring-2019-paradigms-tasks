@@ -102,10 +102,14 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
             threadsafe_queue_push(&qs[0], &counter);
             int *recieved =
 <<<<<<< HEAD
+<<<<<<< HEAD
                 static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
 =======
                     static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
 >>>>>>> Fix indends in tsqueue_test.cpp
+=======
+                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
+>>>>>>> Fix travis
             CHECK(recieved == &counter);
             CHECK(counter == i + 1);
         }
@@ -117,10 +121,14 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
         for (int i = 0; i < PING_PONGS; i++) {
             int *value =
 <<<<<<< HEAD
+<<<<<<< HEAD
                 static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
 =======
                     static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
 >>>>>>> Fix indends in tsqueue_test.cpp
+=======
+                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
+>>>>>>> Fix travis
             (*value)++;
             threadsafe_queue_push(&qs[1], value);
         }

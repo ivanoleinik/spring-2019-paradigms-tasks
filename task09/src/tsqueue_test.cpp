@@ -2,7 +2,7 @@
 #include "tsqueue.h"
 #include "doctest.h"
 
-const int ELEMENTS_PER_THREAD = 1000 * 1000;
+const int ELEMENTS_PER_THREAD = 100 * 1000;
 const int REPEATS = 3;
 
 TEST_CASE("ThreadsafeQueue works like Queue in a single thread") {

@@ -2,13 +2,12 @@
 #include "tsqueue.h"
 #include "doctest.h"
 
-const int ELEMENTS_PER_THREAD = 100 * 1000;
+const int ELEMENTS_PER_THREAD = 1000 * 1000;
 const int REPEATS = 3;
 
 TEST_CASE("ThreadsafeQueue works like Queue in a single thread") {
     ThreadsafeQueue q;
     threadsafe_queue_init(&q);
-<<<<<<< HEAD
 
     int a = 0, b = 0, c = 0;
 
@@ -26,7 +25,6 @@ TEST_CASE("ThreadsafeQueue works like Queue in a single thread") {
 }
 
 TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
-<<<<<<< HEAD
     ThreadsafeQueue qs[2];
     threadsafe_queue_init(&qs[0]);
     threadsafe_queue_init(&qs[1]);
@@ -44,73 +42,11 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
 
     auto pinger = [](void *_qs) -> void * {
         ThreadsafeQueue *qs = static_cast<ThreadsafeQueue *>(_qs);
-        // TODO
-        static_cast<void>(qs);  // Используем переменную как-нибудь.
-        static_cast<void>(PING_PONGS);  // Используем переменную как-нибудь.
-        return nullptr;
-    };
-
-    // TODO
-
-    pthread_t t1, t2;
-    REQUIRE(pthread_create(&t1, nullptr, pinger, qs) == 0);
-    // TODO
-    static_cast<void>(t2);
-    REQUIRE(pthread_join(t1, nullptr) == 0);
-
-    threadsafe_queue_destroy(&qs[1]);
-    threadsafe_queue_destroy(&qs[0]);
-=======
-=======
-
-    int a = 0, b = 0, c = 0;
-
-    threadsafe_queue_push(&q, &a);
-    threadsafe_queue_push(&q, &b);
-    CHECK(threadsafe_queue_wait_and_pop(&q) == &a);
-    CHECK(threadsafe_queue_wait_and_pop(&q) == &b);
-
-    threadsafe_queue_push(&q, &c);
-    threadsafe_queue_push(&q, &b);
-    CHECK(threadsafe_queue_wait_and_pop(&q) == &c);
-    CHECK(threadsafe_queue_wait_and_pop(&q) == &b);
-
-    threadsafe_queue_destroy(&q);
-}
-
-TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
->>>>>>> Fix indends in tsqueue_test.cpp
-    ThreadsafeQueue qs[2];
-    threadsafe_queue_init(&qs[0]);
-    threadsafe_queue_init(&qs[1]);
-
-    // `PING_PONGS` раз должно произойти следующее:
-    // 0. Создаются два потока: `pinger` и `ponger`
-    //    (независимые от основного потока теста).
-    // 1. Поток `pinger` отправляет `qs[0]` потоку `ponger`
-    //    указатель на локальную переменную типа `int`.
-    // 2. Поток `ponger` увеличивает полученную переменную на
-    //    единицу и отправляет результат обратно через `qs[1]`.
-    // 3. Поток `pinger` проверяет, что пришёл правильный адрес
-    //    и что локальная переменная была увеличена.
-    const int PING_PONGS = 100;
-
-    auto pinger = [](void *_qs) -> void * {
-        ThreadsafeQueue *qs = static_cast<ThreadsafeQueue *>(_qs);
         for (int i = 0; i < PING_PONGS; i++) {
             int counter = i;
             threadsafe_queue_push(&qs[0], &counter);
-            int *recieved =
-<<<<<<< HEAD
-<<<<<<< HEAD
-                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
-=======
-                    static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
->>>>>>> Fix indends in tsqueue_test.cpp
-=======
-                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1]));
->>>>>>> Fix travis
-            CHECK(recieved == &counter);
+            CHECK(static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[1])) ==
+                  &counter);
             CHECK(counter == i + 1);
         }
         return nullptr;
@@ -119,18 +55,10 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
     auto ponger = [](void *_qs) -> void * {
         ThreadsafeQueue *qs = static_cast<ThreadsafeQueue *>(_qs);
         for (int i = 0; i < PING_PONGS; i++) {
-            int *value =
-<<<<<<< HEAD
-<<<<<<< HEAD
+            int *counter =
                 static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
-=======
-                    static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
->>>>>>> Fix indends in tsqueue_test.cpp
-=======
-                static_cast<int *>(threadsafe_queue_wait_and_pop(&qs[0]));
->>>>>>> Fix travis
-            (*value)++;
-            threadsafe_queue_push(&qs[1], value);
+            (*counter)++;
+            threadsafe_queue_push(&qs[1], counter);
         }
         return nullptr;
     };
@@ -143,10 +71,6 @@ TEST_CASE("ThreadsafeQueue multithreaded ping-pong") {
 
     threadsafe_queue_destroy(&qs[1]);
     threadsafe_queue_destroy(&qs[0]);
-<<<<<<< HEAD
->>>>>>> Everything works!
-=======
->>>>>>> Fix indends in tsqueue_test.cpp
 }
 
 void *producer(void *_q) {
@@ -163,7 +87,7 @@ void *consumer(void *_q) {
         REQUIRE(threadsafe_queue_wait_and_pop(q) == nullptr);
     }
     return nullptr;
-}
+};
 
 TEST_CASE("ThreadsafeQueue pushes from multiple threads") {
     ThreadsafeQueue q;

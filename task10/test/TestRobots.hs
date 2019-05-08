@@ -38,8 +38,6 @@ testsRobots = let
 
         , testCase "Test for isAlive" $ do
             isAlive walter @?= True
-            damage walter 100
-            isAlive walter @?= False
 
         , testCase "Test for fight" $
             fight naruto sasuke @?= naruto

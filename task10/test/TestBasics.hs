@@ -41,11 +41,17 @@ testsBasics = testGroup "Unit tests for Basics tasks"
     , testCase "foldl'' can be used for finding sum of elements" $
         foldl'' (+) 0 [1,2,3] @?= 6
 
+    , testCase "foldl'' can be used for comparing elements" $
+        foldl'' (\x y -> 2 * x + y) 4 [1,2,3] @?= 43
+
     , testCase "concat' works on finite lists as expected" $
         concat' [1,2,3] [4,5,6] @?= [1..6]
 
-    , testCase "concat' works on infinite list" $
+    , testCase "concat' works on first infinite list" $
         take' 5 (concat' [1..] [2, 3]) @?= take' 5 [1..]
+
+    , testCase "concat' works on second infinite list" $
+        take' 5 (concat' [1, 2] [3..]) @?= take' 5 [1..]
 
     , testCase "concat' works on infinite lists" $
         take' 5 (concat' [1..] [2..]) @?= take' 5 [1..]

@@ -35,13 +35,13 @@ getHealth (_, _, myHealth) = myHealth
 -- состояние робота
 
 setName :: Name -> Robot -> Robot
-setName name robot' = robot name (getAttack robot') (getHealth robot')
+setName name r = robot name (getAttack r) (getHealth r)
 
 setAttack :: Attack -> Robot -> Robot
-setAttack attack robot' = robot (getName robot') attack (getHealth robot')
+setAttack attack r = robot (getName r) attack (getHealth r)
 
 setHealth :: Health -> Robot -> Robot
-setHealth health robot' = robot (getName robot') (getAttack robot') health
+setHealth health r = robot (getName r) (getAttack r) health
 
 -- Шаг 2.
 -- Напишите функцию, которая ведет себя как __str__
@@ -51,7 +51,7 @@ setHealth health robot' = robot (getName robot') (getAttack robot') health
 -- > "Marvin, attack: 100, health: 500"
 
 printRobot :: Robot -> String
-printRobot robot' = getName robot' ++ ", attack: " ++ show (getAttack robot') ++ ", health: " ++ show (getHealth robot')
+printRobot r = getName r ++ ", attack: " ++ show (getAttack r) ++ ", health: " ++ show (getHealth r)
 
 -- Давайте теперь научим роботов драться друг с другом
 -- Напишем функцию damage которая причиняет роботу урон
@@ -65,7 +65,7 @@ damage victim amount = let
 -- Вам понадобится вспомогательная функция isAlive, которая бы проверяла, жив робот или не очень
 -- Робот считается живым, если его уровень здоровья строго больше нуля.
 isAlive :: Robot -> Bool
-isAlive robot' = getHealth robot' > 0
+isAlive r = getHealth r > 0
 
 -- Затем, используя функцию damage, напишите функцию, которая моделирует один раунд схватки между
 -- двумя роботами

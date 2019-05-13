@@ -28,7 +28,7 @@ testsRobots = let
             setAttack 70 sasuke @?= robot "Sasuke" 70 7
 
         , testCase "Test for setHealth" $
-            setHealth 100 naruto @?= robot "Nalter" 8 100
+            setHealth 100 naruto @?= robot "Naruto" 8 100
 
         , testCase "Test for printRobot" $
             printRobot walter @?= "Walter, attack: 50, health: 50"
@@ -36,14 +36,14 @@ testsRobots = let
         , testCase "Test for damage" $
             damage walter 5 @?= robot "Walter" 50 45
 
-        , testCase "Test for isAlive" $ do
+        , testCase "Test for isAlive" $
             isAlive walter @?= True
 
         , testCase "Test for fight" $
-            fight naruto sasuke @?= naruto
+            fight naruto sasuke @?= robot "Sasuke" 7 (-1)
 
         , testCase "Test for threeRoundFight" $
-            threeRoundFight naruto walter @?= walter
+            threeRoundFight naruto walter @?= robot "Walter" 50 42
 
         , testCase "Test for survivors" $
             survivors @?= [robot "Naruto" 8 10, robot "Sakura" 3 9, robot "Sasuke" 7 7]

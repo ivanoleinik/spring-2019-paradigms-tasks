@@ -35,13 +35,13 @@ getHealth (_, _, myHealth) = myHealth
 -- состояние робота
 
 setName :: Name -> Robot -> Robot
-setName name (_, attack, health) = (name, attack, health)
+setName name robot' = robot name (getAttack robot') (getHealth robot')
 
 setAttack :: Attack -> Robot -> Robot
-setAttack attack (name, _, health) = (name, attack, health)
+setAttack attack robot' = robot (getName robot') attack (getHealth robot')
 
 setHealth :: Health -> Robot -> Robot
-setHealth health (name, attack, _) = (name, attack, health)
+setHealth health robot' = robot (getName robot') (getAttack robot') health
 
 -- Шаг 2.
 -- Напишите функцию, которая ведет себя как __str__
@@ -51,7 +51,7 @@ setHealth health (name, attack, _) = (name, attack, health)
 -- > "Marvin, attack: 100, health: 500"
 
 printRobot :: Robot -> String
-printRobot (name, attack, health) = name ++ ", attack: " ++ show attack ++ ", health: " ++ show health
+printRobot robot' = getName robot' ++ ", attack: " ++ show (getAttack robot') ++ ", health: " ++ show (getHealth robot')
 
 -- Давайте теперь научим роботов драться друг с другом
 -- Напишем функцию damage которая причиняет роботу урон
@@ -77,7 +77,7 @@ isAlive robot' = getHealth robot' > 0
 -- вернуть второго робота, как будто ничего и не было
 fight :: Robot -> Robot -> Robot
 fight attacker defender | isAlive attacker = damage defender (getAttack attacker)
-                        | otherwise = defender
+                        | otherwise        = defender
 
 -- Наконец, напишите функцию, которая бы моделировала три раунда схватки между
 -- двумя роботами и возвращала бы победителя. Схватка происходит следующим образом:

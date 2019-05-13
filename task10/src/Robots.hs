@@ -94,8 +94,7 @@ threeRoundFight attacker defender =
         defender' = fight attacker defender
         attacker' = fight defender' attacker
         defender'' = fight attacker' defender'
-    in
-        if getHealth defender'' > getHealth attacker'
+    in if getHealth defender'' > getHealth attacker'
             then defender''
             else attacker'
 

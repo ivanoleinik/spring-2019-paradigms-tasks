@@ -16,13 +16,13 @@ testsRobots = let
             getName walter @?= "Walter"
 
         , testCase "Test for getAttack" $
-            getAttack naruto @?= 8
+            getAttack walter @?= 50
 
         , testCase "Test for getHealth" $
-            getHealth naruto @?= 10
+            getHealth walter @?= 50
 
         , testCase "Test for setName" $
-            setName "Valtor" walter @?= robot "Valtor" 50 50
+            setName "Kakashi" sasuke @?= robot "Kakashi" 7 7
 
         , testCase "Test for setAttack" $
             setAttack 70 sasuke @?= robot "Sasuke" 70 7
